@@ -1,0 +1,23 @@
+const express = require('express')
+const {getCheckoutSession,getBooking, getAllBooking, createBooking, updateBooking, deleteBooking,checkRoom} = require('../controllers/bookingController')
+const {protect, restrictTo} =require('../controllers/authController')
+
+const router = express.Router()
+
+router.use(protect)
+
+router.get('/checkout-session/:tourID',protect,checkRoom,getCheckoutSession)
+
+router.use(restrictTo('admin','lead-guide'))
+
+router.route('/')
+        .get(getAllBooking)
+        .post(createBooking)
+
+router.route('/:id')
+        .get(getBooking)
+        .patch(updateBooking)
+        .delete(deleteBooking)
+
+
+module.exports = router
