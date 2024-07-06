@@ -67,7 +67,6 @@ exports.uploadTourImages = upload.fields([
 //// upload.single[name] req.file
 
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
-  // console.log(req.files);
 
   if (!req.files.imageCover || !req.files.images) return next();
 

@@ -207,11 +207,11 @@ tourSchema.pre(/^find/, function(next){
   next()
 })
 
-tourSchema.post(/^find/, function (doc, next) {
-  console.log(`query took  ${Date.now() - this.start} millisecond`);
-  // console.log(doc);
-  next();
-});
+// tourSchema.post(/^find/, function (doc, next) {
+//   console.log(`query took  ${Date.now() - this.start} millisecond`);
+//   // console.log(doc);
+//   next();
+// });
 
 
 //AGGREGATION MIDDLEWARE

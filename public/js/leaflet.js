@@ -5,7 +5,6 @@ const mapBox = document.getElementById('map')
 if(mapBox){
 
 const loc = JSON.parse(mapBox.dataset.locations)
-// console.log(loc);
 
 
 

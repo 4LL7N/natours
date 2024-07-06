@@ -12,10 +12,9 @@ const logOutBtn = document.querySelector('.nav__el--logOut')
 
 const login = async (email,password)=>{
     try{
-        console.log('before axios');
     const res = await axios({
         method:'POST',
-        url:'http://127.0.0.1:8000/api/v1/users/login',
+        url:'/api/v1/users/login',
         data:{
             email,
             password
@@ -29,7 +28,6 @@ const login = async (email,password)=>{
         },1500)
     }
 
-    console.log(res);
     }catch(err){
         // showAlert('error',err.response.data.message)
         alert(err.response.data.message)
@@ -50,9 +48,8 @@ const logout =async () => {
     try{
         const res = await axios({
             method:'GET',
-            url:'http://127.0.0.1:8000/api/v1/users/logout'
+            url:'/api/v1/users/logout'
         })
-        console.log(res);
         if(res.data.status === 'success')location.href = '/'
     }catch(err){
         alert('Error logging out! try again')
@@ -67,7 +64,7 @@ if(logOutBtn){
 // type is either password or data
 const updateSettings = async (data, type) => {
     try{
-        const url = type === 'password' ? 'http://127.0.0.1:8000/api/v1/users/updateMyPassword':'http://127.0.0.1:8000/api/v1/users/updateMe'
+        const url = type === 'password' ? '/api/v1/users/updateMyPassword':'/api/v1/users/updateMe'
 
         const res= await axios({
             method:'PATCH',
@@ -95,14 +92,12 @@ if(UpdateForm){
         
         form.append('photo',document.getElementById('photo').files[0]/*first because we upload only one picture*/)
 
-        console.log(form);
 
         updateSettings(form,'data')
     })
 }
 
 if(PasswordForm){
-    console.log();
     PasswordForm.addEventListener('submit',async e=>{
         e.preventDefault()
         document.querySelector('.btn--save-password').textContent = 'Updating...'
@@ -117,6 +112,6 @@ if(PasswordForm){
         document.getElementById('password-current').value=''
         document.getElementById('password').value=''
         document.getElementById('password-confirm').value=''
-        console.log(document.getElementById('password-confirm').value);
+      
     })
 }

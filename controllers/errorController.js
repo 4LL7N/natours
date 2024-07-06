@@ -76,7 +76,6 @@ const sendErrorProd = (err,req,res)=>{
     }
     //B)
       // 1) LOg error
-      console.error(err);
       //2) send generic message
       return res.status(err.statusCode).render('error',{
         title:'Something went wrong',
