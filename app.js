@@ -132,7 +132,7 @@ app.use(
 app.use((req, res, next) => {
   res.requestTime = new Date().toISOString();
   // console.log(x);
-  console.log(req.cookies);
+  
   next();
 });
 
