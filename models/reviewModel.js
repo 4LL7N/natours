@@ -67,11 +67,11 @@ reviewSchema.pre(/^find/, function(next){
 })
 
 
-reviewSchema.post(/^find/, function (doc, next) {
-    console.log(`query took  ${Date.now() - this.start} millisecond`);
-    // console.log(doc);
-    next();
-  });
+// reviewSchema.post(/^find/, function (doc, next) {
+//     console.log(`query took  ${Date.now() - this.start} millisecond`);
+//     // console.log(doc);
+//     next();
+//   });
 
 reviewSchema.statics.calcAverageRatings = async function(tourId){
     // console.log(tourId," tourrr id");

@@ -28,8 +28,7 @@ exports.checkRoom = catchAsync(async(req,res,next) => {
   // maxGroupSize
   const bookings = await Booking.find({tour:req.params.tourID})
 
-  const booked = bookings.length
-  console.log(booked);
+  
   if(bookings.length == tour.maxGroupSize)return next(new AppError('tour group is already full',409))
   
 
