@@ -25,7 +25,7 @@ const DB = process.env.DATABASE.replace(
 
 mongoose
   .connect(DB)
-  .then(() => console.log(`db connection success ::: ${process.env.DATABASE}  ${process.env.DATABASE_PASSWORD}  `))
+  .then(() => console.log(`db connection success`))
 const port = process.env.PORT || 3000;
 
 
