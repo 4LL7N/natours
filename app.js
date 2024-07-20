@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -6,9 +6,9 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const cookieParser = require('cookie-parser')
-const compression = require('compression')
-const cors = require('cors')
+const cookieParser = require('cookie-parser');
+const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -16,23 +16,24 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoute');
 const bookingRouter = require('./routes/bookingRoutes');
-const viewRouter =require('./routes/viewRoutes')
-
+const bookingController = require('./controllers/bookingController');
+const viewRouter = require('./routes/viewRoutes');
 
 //start express
 const app = express();
 
-app.set('view engine','pug')
-app.set('views',path.join(__dirname,'views'))
+app.enable('trust proxy');
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 //serving static files
-app.use(express.static(path.join(__dirname,'/public')))
+app.use(express.static(path.join(__dirname, '/public')));
 
 /// 1) Global middleware
 
 //Set Security HTTP  headers
 // app.use(helmet());
-
 
 // CORS policy
 app.use(cors());
@@ -42,12 +43,9 @@ app.use(cors());
 //   origin:'https://www.natours.com'
 // }))
 
-
 // this code is to allows to be done complex methods(put,patch,delete) from other domains, code before this allows only simple methods (get)
 app.options('*', cors());
 // app.options('/api/v1/tours/:id',cors())
-
-
 
 // Further HELMET configuration for Content Security Policy (CSP)
 // Source: https://github.com/helmetjs/helmet
@@ -75,7 +73,6 @@ const connectSrcUrls = [
   'http://localhost/api/v1/bookings/checkout-session/',
 ];
 
-
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 app.use(
@@ -88,11 +85,9 @@ app.use(
       styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
       imgSrc: ["'self'", 'blob:', 'data:', 'https:'],
       workerSrc: ["'self'", 'blob:'],
-      
     },
-  })
+  }),
 );
-
 
 //development logging
 if (process.env.NODE_ENV == 'development') {
@@ -108,12 +103,19 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-//Body  parser, reading data from body into req.body
+//doing this in app , because we want body to be raw form (string and not json)
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
+
+//Body  parser (formatted to json format), reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 
 // to get response when i click on submit button in user change form where i set action to be on specific route and which has named input tags (only this input values will be shown)
-app.use(express.urlencoded({extended:true,limit:'10kb'}))
-app.use(cookieParser())
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(cookieParser());
 
 //reads data from body parser and sanitization Data against NoSQL query injection (deletes $signs or something like that symbols fro example:  "email":{"$gt":""}" this code will let you log in without email)
 app.use(mongoSanitize());
@@ -143,24 +145,23 @@ app.use(
 //   next();
 // });
 
-app.use(compression())
+app.use(compression());
 
 //Test middleware
 app.use((req, res, next) => {
   res.requestTime = new Date().toISOString();
   // console.log(x);
-  
+
   next();
 });
 
 // 3 routes
 
-app.use('/',viewRouter)
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews',reviewRouter)
-app.use('/api/v1/bookings',bookingRouter)
-
+app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
   // res.status(404).json(
