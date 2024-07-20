@@ -17,7 +17,6 @@ router.get('/', isLoggedIn, getOverview);
 router.get('/tour/:slug', isLoggedIn, getTour);
 router.get('/login', isLoggedIn, Login);
 
-
 // /login
 router.get('/signup', Signup);
 router.get('/me', protect, getAccount);
