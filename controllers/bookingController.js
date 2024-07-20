@@ -97,9 +97,7 @@ const createBookingCheckout = async  session => {
 }
 
 exports.webhookCheckout = (req, res, next) => {
-  console.log(req.headers['stripe-signature'] , "  req.header");
-  console.log(process.env.STIPE_WEBHOOK_SECRET , "  process.env.STIPE_WEBHOOK_SECRET");
-  console.log(req.body , " req.body ");
+  
   const signature = req.headers['stripe-signature'];
   let event;
   try {
@@ -109,15 +107,14 @@ exports.webhookCheckout = (req, res, next) => {
       process.env.STIPE_WEBHOOK_SECRET,
     );
   } catch (err) {
-    console.log(err);
+    
     return res.status(400).send(`Webhook error:${err.message}`);
   }
 
-  console.log(event.data.object);
 
-  // if(event.type ==='checkout.session.completed'){
-  //   createBookingCheckout(event.data.object)
-  // }
+  if(event.type ==='checkout.session.completed'){
+    createBookingCheckout(event.data.object)
+  }
   res.status(200).json({received:true})
 };
 
