@@ -10,7 +10,7 @@ html
             link(href='https://fonts.googleapis.com/css?family=Lato:300,300i,700' rel='stylesheet')
             title Natours | #{title}
     
-    body 
+    body(data-alert=`${alert?alert:""}` )
         // Header
         include _header
         // CONTENT
@@ -26,4 +26,5 @@ html
         script(src='/js/login.js' )
         script(src='/js/signup.js' )
         script(src='/js/stripe.js')
+        script(src='/js/index.js')
 
